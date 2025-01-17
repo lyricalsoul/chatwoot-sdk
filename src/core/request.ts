@@ -12,6 +12,8 @@ import { CancelablePromise } from "./CancelablePromise";
 import type { OnCancel } from "./CancelablePromise";
 import type { ChatwootAPIConfig } from "./ChatwootAPI";
 import { file_upload } from "../models/file_upload";
+import axiosRetry from "axios-retry";
+import { Readable } from "stream";
 
 const isDefined = <T>(value: T | null | undefined): value is Exclude<T, null | undefined> => {
     return value !== undefined && value !== null;
@@ -225,6 +227,7 @@ const sendRequest = async <T>(
         withCredentials: config.with_credentials,
         cancelToken: source.token,
     };
+    axiosRetry(axios, config.retry_options);
 
     onCancel(() => source.cancel("The user aborted a request."));
 
@@ -315,3 +318,15 @@ export const request = <T>(config: ChatwootAPIConfig, options: ApiRequestOptions
         }
     });
 };
+
+export const bufferToStream = (value: Record<string, unknown>) => new Readable({
+    read() {
+        this.push(Buffer.from(value?.content as string, value?.encoding as BufferEncoding));
+        this.push(null);
+    },
+})
+
+export const decideOnStream = (value: Record<string, unknown>) => {
+    if (value?.content instanceof Readable) return value.content
+    else return bufferToStream(value);
+}

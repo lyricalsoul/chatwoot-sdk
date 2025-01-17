@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import axiosRetry, { AxiosRetry } from "axios-retry";
 import type { ApiRequestOptions } from "./ApiRequestOptions";
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
@@ -15,6 +16,7 @@ export type ChatwootAPIConfig = {
     password?: string | Resolver<string>;
     headers?: Headers | Resolver<Headers>;
     encode_path?: (path: string) => string;
+    retry_options?: import("axios-retry").IAxiosRetryConfig;
 };
 
 export const ChatwootAPI: ChatwootAPIConfig = {
@@ -26,4 +28,8 @@ export const ChatwootAPI: ChatwootAPIConfig = {
     password: undefined,
     headers: undefined,
     encode_path: undefined,
+    retry_options: {
+        retries: 3,
+        retryDelay: axiosRetry.exponentialDelay
+    }
 };

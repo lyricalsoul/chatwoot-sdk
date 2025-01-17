@@ -8,7 +8,7 @@ import type { message } from "../models/message";
 
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { ChatwootAPIConfig } from "../core/ChatwootAPI";
-import { request as __request } from "../core/request";
+import { request as __request, decideOnStream } from "../core/request";
 import { Blob } from "buffer";
 import { Readable } from "stream";
 import { file_upload } from "../models/file_upload";
@@ -85,12 +85,7 @@ export class Messages {
         if (attachments) {
             files = attachments.map<file_upload>((value) => {
                 return {
-                    content: new Readable({
-                        read() {
-                            this.push(Buffer.from(value?.content as string, value?.encoding as BufferEncoding));
-                            this.push(null);
-                        },
-                    }),
+                    content: decideOnStream(value),
                     filename: value?.filename as string,
                 };
             });
@@ -145,12 +140,7 @@ export class Messages {
         if (attachments) {
             files = attachments.map<file_upload>((value) => {
                 return {
-                    content: new Readable({
-                        read() {
-                            this.push(Buffer.from(value?.content as string, value?.encoding as BufferEncoding));
-                            this.push(null);
-                        },
-                    }),
+                    content: decideOnStream(value),
                     filename: value?.filename as string,
                 };
             });
