@@ -4,11 +4,16 @@
   "description": "SDK for JS/Typescript for Chatwoot.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/figurolatam/chatwoot-sdk.git"
+    "url": "https://github.com/lyricalsoul/chatwoot-sdk.git"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
+  "files": [
+    "src",
+    "dist",
+    "tsconfig.json"
+  ],
   "scripts": {
     "format": "npm exec -- prettier --write ./src --loglevel warn",
     "lint": "npm exec -- eslint ./src --ext .ts --fix",
