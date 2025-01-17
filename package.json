@@ -9,15 +9,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
-  "files": [
-    "dist/**/*"
-  ],
   "scripts": {
     "format": "npm exec -- prettier --write ./src --loglevel warn",
     "lint": "npm exec -- eslint ./src --ext .ts --fix",
     "build": "npm exec -- tsc -b --clean && npm exec -- tsc --declaration",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "npm exec -- release-it"
+    "release": "npm exec -- release-it",
+    "postinstall": "npm run build"
   },
   "keywords": [
     "chatwoot"
